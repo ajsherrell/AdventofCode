@@ -3,15 +3,18 @@ package com.ajsherrell.android.adventcode
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.TextView
 import kotlin.math.absoluteValue
 import kotlin.math.floor
+import kotlin.math.log
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var moduleFuel: Button
-    private val modulesMass: Array<Int> = arrayOf(128167,
+    private val modulesMass = listOf(
+        128167,
         65779,
         88190,
         144176,
@@ -116,47 +119,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         moduleFuel = findViewById(R.id.module_fuel)
-        val fuel = "Fuel: ${fuelTotal()}"
-        if (fuel == null) {
-            moduleFuel.text = "No fuel!"
-        } else {
-            moduleFuel.text = fuel
-        }
+
+        moduleFuel.text = "Fuel: ${fuelTotal()}"
 
         moduleFuel.setOnClickListener {
-            // Handler code here.
+            // Handler code here for learning RxJava.
             val intent = Intent(applicationContext, LearnRx::class.java)
             startActivity(intent);
         }
     }
 
     private fun fuelTotal(): Int {
-        val mass = calculateModuleMassFuel(modulesMass)
-        val fuel = fuelForFuelMassCalculation(modulesMass)
-        return mass + fuel
+        return calculateModuleMassFuel(modulesMass)
+       // val fuel = fuelForFuelMassCalculation(modulesMass)
+//        return mass + fuel
     }
 
-    private fun calculateModuleMassFuel(moduleMass: Array<Int>): Int {
-        var massListSum = 0
-        for (mass in moduleMass) {
-           massListSum += mass / 3 - 2
+    private fun calculateModuleMassFuel(moduleMass: List<Int>): Int {
+        var massFuel = 0
+        moduleMass.forEach {
+            massFuel += floor((it / 3 - 2).toDouble()).toInt()
         }
-        return massListSum
+        return massFuel
     }
 
-    private fun fuelForFuelMassCalculation(moduleMass: Array<Int>): Int {
-        var fuel = 0
-        var index = 0
-
-        for (i in moduleMass.indices) {
-            var f = i / 3 - 2
-            while (f > 0) {
-                f = f / 3 - 2
-            }
-            moduleMass.indices.step
-            fuel+=f
-        }
-
-        return fuel
-    }
 }
